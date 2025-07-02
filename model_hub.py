@@ -9,7 +9,7 @@ from strhub.models.baseline_gnn_autoregressive_permutate.system import GNN_AR_Sy
 from strhub.models.region_focus_gnn_ar.system import RegionGNNCSLRSystem
 from strhub.models.region_focus_gnn_ar_multiloss.system import MultiRegionCSLRSystem as RegionGNNCSLRSystem_MultiSupervision
 from strhub.models.us_region_focus_gnn_multiloss.system import MultiRegionCSLRSystem as RegionGNNCSLRSystem_US
-from strhub.models.region_focus_gnn_CTC.system import RegionGNNCSLRSystemCTC
+# from strhub.models.region_focus_gnn_CTC.system import RegionGNNCSLRSystemCTC
 from strhub.models.region_focus_gnn_ar_multiloss_rgb.system import MultiRegionCSLRSystemRGB
 from strhub.models.region_focus_gnn_ar_multiloss_skeleton.system import MultiRegionCSLRSystemSkeleton
 from strhub.models.region_focus_gnn_nar_us.system import NARRegionGNNCSLRSystem
@@ -32,7 +32,7 @@ MODEL_SYSTEMS = {
     "RegionGNNCSLRSystem": RegionGNNCSLRSystem,
     "RegionGNNCSLRSystem_MultiSupervision": RegionGNNCSLRSystem_MultiSupervision,
     "RegionGNNCSLRSystem_US": RegionGNNCSLRSystem_US,
-    "RegionGNNCSLRSystemCTC": RegionGNNCSLRSystemCTC,
+    # "RegionGNNCSLRSystemCTC": RegionGNNCSLRSystemCTC,
     "RegionGNNCSLRSystemRGB": MultiRegionCSLRSystemRGB,
     "RegionGNNCSLRSystemSkeleton": MultiRegionCSLRSystemSkeleton,
     "NARRegionGNNCSLRSystem": NARRegionGNNCSLRSystem,
