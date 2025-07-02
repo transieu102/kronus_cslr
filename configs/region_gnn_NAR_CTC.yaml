@@ -1,0 +1,73 @@
+# =========================
+# DATASET CONFIGURATION
+# =========================
+dataset:
+  train_csv: "data/us/train.csv"
+  val_csv: "data/us/dev.csv"
+  pose_pkl: "data/pose_data_isharah1000_hands_lips_body_May12.pkl"
+  delimiter: ","
+  min_len: 32
+  max_len: 1000
+  additional_joints: true
+  augment: true
+  augment_prob: 0.5
+  # use_synth_gloss: true
+  # use_synth_gloss_prob: 0.3
+  # augment_segment: true
+  # segment_csv: "/home/sieut/kronus/data/gloss_segments/us/gloss_segments_20250617_074742.csv"
+  # random_segment_prob: 0.3
+  # random_label_prob: 0.2
+  # min_random_len: 2
+  # max_random_len: 8
+  # synth_gloss_csv: "/home/sieut/kronus/data/us/synthetic_gloss_sentence.csv"
+  tokenizer_type: "both"   # "ctc" hoặc "seq2seq"
+
+# =========================
+# MODEL CONFIGURATION
+# =========================
+model:
+  name: "CTC_NAR_RegionGNNSystem"
+  input_dim: 172   # Số joints * 2 (nếu pose là [B, T, 43, 2] thì 43*2=86)
+  d_model: 1024 # =region_feature_dim * len(self.regions)
+  dim_feedforward: 2048
+  num_encoder_layers: 2
+  encoder_num_heads: 8
+  decoder_num_heads: 8
+  num_decoder_layers: 1
+  dec_mlp_ratio: 4
+  refine_iters: 1
+  dropout: 0.1
+  max_input_len: 1000    # <-- Độ dài sequence đầu vào (encoder)
+  max_output_len: 12    # <-- Độ dài sequence đầu ra (decode/inference)
+  #gnn
+  gnn_type: "gcn"
+  num_gnn_layers: 2
+  gnn_hidden_dim: 256
+  gnn_feature_dim: 64  # Feature dimension per joint
+  gnn_dropout: 0.1
+  region_feature_dim: 256 
+  gnn_kwargs: {}
+# =========================
+# TRAINER CONFIGURATION
+# =========================
+trainer:
+  batch_size: 16
+  num_workers: 8
+  epochs: 500
+  lr: 0.0005
+  weight_decay: 0.01
+  warmup_pct: 0.1
+  device: "cuda"
+  seed: 42
+  # save_dir: "./checkpoints/"
+  log_interval: 50
+  # pretrained: "/home/sieut/kronus/logsus/NARRegionGNNCSLRSystem/runs_20250616_161026/version_0/checkpoints/epoch=23-val_loss=val_loss=4.3857-val_wer=val_wer=72.4316.ckpt"
+  # log_interval_step: 100
+  check_val_every_n_epoch: 2
+  devices: 1
+# =========================
+# LOGGING & MISC
+# =========================
+logging:
+  log_dir: "./logs"
+  print_config: true
