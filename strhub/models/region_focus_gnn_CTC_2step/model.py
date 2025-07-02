@@ -9,7 +9,7 @@ from typing import Optional, Sequence, Dict, Any, List, Union, Tuple
 from torch import Tensor
 from strhub.data.utils import CTCGlossTokenizer as Tokenizer
 import numpy as np
-import torchaudio
+# import torchaudio
 
 class PosEnc(nn.Module):
     """Positional encoding for transformer"""
@@ -251,102 +251,4 @@ class RegionGNNCSLRModel(nn.Module):
 
     
 
-    def align(
-        self,
-        poses: Tensor,
-        labels: Tensor,
-        tokenizer: Tokenizer,
-        blank_id: Optional[int] = None
-    ) -> List[List[Tuple[int, int]]]:
-        """
-        Perform forced alignment between poses and labels using torchaudio's forced alignment.
-        Args:
-            poses: Input skeleton features [B, T, J, 2]
-            labels: Target labels [B, L] - ground truth tokens
-            tokenizer: CTC tokenizer
-            blank_id: ID of blank token (if None, will use tokenizer's blank_id)
-        Returns:
-            List of alignments, where each alignment is a list of (start_frame, end_frame) tuples
-            for each non-blank token in the ground truth sequence
-        """
-        if blank_id is None:
-            blank_id = tokenizer.blank_id
-            
-        # Encode labels to get token IDs
-        targets = tokenizer.encode(labels, self._device)  # [B, L]
-        
-        # Encode poses
-        memory = self.encode(poses)  # [B, T/4, d_model]
-        logits = self.out_proj(memory)  # [B, T/4, num_classes]
-        
-        # Compute emission probabilities
-        probs = F.softmax(logits, dim=-1)  # [B, T/4, num_classes]
-        
-        # Convert to log probabilities for torchaudio
-        log_probs = torch.log(probs + 1e-10)
-        
-        # Get number of non-blank tokens for each sequence
-        num_tokens = [(targets[b] != blank_id).sum().item() for b in range(targets.size(0))]
-        
-        # Perform forced alignment using torchaudio
-        alignments = []
-        for b in range(targets.size(0)):
-            # Get non-blank tokens for this sequence
-            non_blank_mask = targets[b] != blank_id
-            non_blank_tokens = targets[b][non_blank_mask]
-            
-            if len(non_blank_tokens) == 0:
-                alignments.append([])
-                continue
-            
-            try:
-                # Convert to format expected by torchaudio
-                log_probs_b = log_probs[b].unsqueeze(0)  # [1, T, C]
-                targets_b = non_blank_tokens.unsqueeze(0)  # [1, L]
-                
-                # Cast input/target lengths to tensors
-                input_lengths = torch.tensor([log_probs_b.size(1)], device=log_probs_b.device)
-                target_lengths = torch.tensor([len(non_blank_tokens)], device=log_probs_b.device)
-                
-                # Call torchaudio forced_align
-                alignment = torchaudio.functional.forced_align(
-                    log_probs_b,       # [1, T, C]
-                    targets_b,         # [1, L]
-                    input_lengths,     # [1]
-                    target_lengths,    # [1]
-                    blank_id
-                )
-                
-                frame_alignment = []
-                best_path = alignment[0].squeeze(0)  # shape: [T]
-                prev_token = None
-                start = 0
-                
-                for t, token in enumerate(best_path.tolist()):
-                    if token == blank_id:
-                        continue
-                    if token != prev_token:
-                        if prev_token is not None:
-                            frame_alignment.append((start, t))
-                        start = t
-                        prev_token = token
-                
-                # Add last token segment
-                if prev_token is not None:
-                    frame_alignment.append((start, len(best_path)))
-                    # print(f"Sequence {b}:")
-                    # print(f"Alignment: {frame_alignment}")
-                    # print(f"Probs: {probs.shape}")
-                    # input()
-                    # print(f"Decoded: {tokenizer.decode(probs[:,start:len(best_path),:])}")
-                    # input()
-                # Map frame indices back to original resolution
-                frame_alignment = [(start * 4, end * 4) for start, end in frame_alignment]
-                alignments.append(frame_alignment)
-            except Exception as e:
-                print(f"Error in forced alignment for sequence {b}: {e}")
-                alignments.append([])
-        
-        return alignments
-
-    
+ 
