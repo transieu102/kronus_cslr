@@ -7,7 +7,7 @@ import torch
 from torch import Tensor
 from torch.nn.utils.rnn import pad_sequence
 import pandas as pd
-from pyctcdecode import BeamSearchDecoderCTC, Alphabet, build_ctcdecoder
+# from pyctcdecode import BeamSearchDecoderCTC, Alphabet, build_ctcdecoder
 import numpy as np
 class BaseGlossTokenizer(ABC):
     """

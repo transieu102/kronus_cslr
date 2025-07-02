@@ -5,7 +5,7 @@ from pytorch_lightning import Trainer, seed_everything
 from pytorch_lightning.callbacks import ModelCheckpoint
 from strhub.data.dataset import CSLRPoseDataset
 from strhub.data.dataset_segment_augment import CSLRRandomSegmentDataset
-from strhub.data.dataset_rgb import CSLRPoseDatasetRGB
+# from strhub.data.dataset_rgb import CSLRPoseDatasetRGB
 from strhub.data.utils import build_tokenizer_from_csv
 from pytorch_lightning.loggers import TensorBoardLogger
 import os
@@ -93,16 +93,16 @@ if __name__ == "__main__":
             augment_prob=config["dataset"]["augment_prob"],
             additional_joints=config["dataset"]["additional_joints"]
         )
-    elif config["dataset"].get('frame_size', None) is not None:
-        train_dataset = CSLRPoseDatasetRGB(
-            config=config["dataset"],
-            label_csv=config["dataset"]["train_csv"],
-            pose_pkl=config["dataset"]["pose_pkl"],
-            split_type="train",
-            augment=config["dataset"]["augment"],
-            augment_prob=config["dataset"]["augment_prob"],
-            additional_joints=config["dataset"]["additional_joints"]
-        )
+    # elif config["dataset"].get('frame_size', None) is not None:
+    #     train_dataset = CSLRPoseDatasetRGB(
+    #         config=config["dataset"],
+    #         label_csv=config["dataset"]["train_csv"],
+    #         pose_pkl=config["dataset"]["pose_pkl"],
+    #         split_type="train",
+    #         augment=config["dataset"]["augment"],
+    #         augment_prob=config["dataset"]["augment_prob"],
+    #         additional_joints=config["dataset"]["additional_joints"]
+    #     )
     else:
         train_dataset = CSLRPoseDataset(
             config=config["dataset"],
@@ -113,24 +113,24 @@ if __name__ == "__main__":
             augment_prob=config["dataset"]["augment_prob"],
             additional_joints=config["dataset"]["additional_joints"]
         )
-    if config["dataset"].get('frame_size', None) is not None:
-        val_dataset = CSLRPoseDatasetRGB(
-            config=config["dataset"],
-            label_csv=config["dataset"]["val_csv"],
-            pose_pkl=config["dataset"]["pose_pkl"],
-            split_type="val",
-            augment=False,
-            additional_joints=config["dataset"]["additional_joints"]
-        )
-    else:
-        val_dataset = CSLRPoseDataset(
+    # if config["dataset"].get('frame_size', None) is not None:
+    #     val_dataset = CSLRPoseDatasetRGB(
+    #         config=config["dataset"],
+    #         label_csv=config["dataset"]["val_csv"],
+    #         pose_pkl=config["dataset"]["pose_pkl"],
+    #         split_type="val",
+    #         augment=False,
+    #         additional_joints=config["dataset"]["additional_joints"]
+    #     )
+    # else:
+    val_dataset = CSLRPoseDataset(
         config=config["dataset"],
         label_csv=config["dataset"]["val_csv"],
         pose_pkl=config["dataset"]["pose_pkl"],
         split_type="val",
         augment=False,
         additional_joints=config["dataset"]["additional_joints"]
-    )
+        )
     train_loader = DataLoader(
         train_dataset,
         batch_size=config["trainer"]["batch_size"],
