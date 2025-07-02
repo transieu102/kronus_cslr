@@ -18,10 +18,10 @@ pip install -r requirements.txt
 ## Inference (Last Submission)
 
 1. **Download Checkpoints:**
-   - Download the model checkpoint(s) from the provided Google Drive link (see challenge instructions or contact authors).
+   - Download the model checkpoint(s) from the provided Google Drive link: [Google Drive - Challenge Resources](https://drive.google.com/drive/folders/1EMjx0MYVghyJSPlEqKaahomhDNjMm3dM?usp=sharing)
 
 2. **Get Last Submission Info:**
-   - For each task, find the corresponding last submission info in the appropriate `<task>_last_submission.txt` file (replace `<task>` with the actual task name).
+   - For each task, find the corresponding last submission info in the appropriate file (e.g., `SI_last_submission_info`, `US_last_submission_info`) from the same Google Drive link above.
 
 3. **Adjust Inference Script:**
    - Edit `inference_batch_fusion.py` to update paths and settings according to your environment and the downloaded checkpoint.
@@ -35,7 +35,7 @@ pip install -r requirements.txt
 ## Reproduce Training
 
 1. **Get Config:**
-   - Download the configuration file for the model you want to reproduce from Google Drive (see challenge resources).
+   - Download the configuration file for the model you want to reproduce from the [Google Drive - Challenge Resources](https://drive.google.com/drive/folders/1EMjx0MYVghyJSPlEqKaahomhDNjMm3dM?usp=sharing).
 
 2. **Run Training:**
    - Use the following command, replacing `<config_path>` with your config file:
